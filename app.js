@@ -1,13 +1,15 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const router = require('./routes')
-const log = require('./middlewares/logger')
+const productRouter = require('./app/products/routes');
+const productRouterV2 = require('./app/products-v2/routes');
+const logger = require('morgan');
 
-app.use(log);
+app.use(logger('dev'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(router);
+app.use('/api/v1', productRouter);
+app.use('/api/v2', productRouterV2);
 app.use((req, res, next) => {
     res.status(404);
     res.send({
